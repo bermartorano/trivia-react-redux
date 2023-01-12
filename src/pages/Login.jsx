@@ -38,6 +38,11 @@ class Login extends Component {
     history.push('/game');
   };
 
+  redirectSettings = () => {
+    const { history } = this.props;
+    history.push('/settings');
+  };
+
   render() {
     const { nome, email, buttonDisabled } = this.state;
     return (
@@ -75,6 +80,13 @@ class Login extends Component {
             Play
           </button>
         </form>
+        <button
+          type="button"
+          onClick={ this.redirectSettings }
+          data-testid="btn-settings"
+        >
+          Configuração
+        </button>
       </div>
     );
   }
