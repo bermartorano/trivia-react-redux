@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+import tokenAndInfoSave from '../redux/actions/index';
+import tokenApi from '../services/api';
 import logo from '../trivia.png';
 // import '../App.css';
 
-export default class Login extends Component {
+class Login extends Component {
   state = {
     nome: '',
     email: '',
@@ -23,6 +27,15 @@ export default class Login extends Component {
   handleChange = ({ target }) => {
     const { name, value } = target;
     this.setState({ [name]: value }, () => { this.isFormCompleted(); });
+  };
+
+  handleOnClick = async () => {
+    const { nome, email } = this.state;
+    const { dispatch, history } = this.props;
+    const token = await tokenApi();
+    dispatch(tokenAndInfoSave(token, nome, email));
+    localStorage.setItem('token', token);
+    history.push('/game');
   };
 
   render() {
@@ -56,7 +69,7 @@ export default class Login extends Component {
           <button
             type="button"
             disabled={ buttonDisabled }
-            // onClick={}
+            onClick={ this.handleOnClick }
             data-testid="btn-play"
           >
             Play
@@ -66,3 +79,10 @@ export default class Login extends Component {
     );
   }
 }
+
+Login.propTypes = {
+  dispatch: PropTypes.func.isRequired,
+  history: PropTypes.func.isRequired,
+};
+
+export default connect()(Login);
