@@ -9,6 +9,8 @@ class GamePage extends Component {
     questionText: '',
     answers: [],
     correctAnswer: '',
+    borderAnswer: 'hidden',
+    isNextEnable: false,
   };
 
   componentDidMount() {
@@ -38,8 +40,24 @@ class GamePage extends Component {
     }
   };
 
+  handleNext = async () => {
+    await this.getTrivia();
+    this.setState({
+      borderAnswer: 'hidden',
+      isNextEnable: false,
+    });
+  };
+
+  handleButtonClick = () => {
+    const { borderAnswer: current } = this.state;
+    this.setState({
+      borderAnswer: current === 'hidden' && 'solid',
+      isNextEnable: true,
+    });
+  };
+
   generateButtons = () => {
-    const { answers, correctAnswer } = this.state;
+    const { answers, correctAnswer, borderAnswer } = this.state;
     const allBtns = answers.map((answer, index) => {
       if (answer === correctAnswer) {
         return (
@@ -47,6 +65,8 @@ class GamePage extends Component {
             key={ index }
             data-testid="correct-answer"
             type="button"
+            style={ { border: '3px solid rgb(6, 240, 15)', borderStyle: borderAnswer } }
+            onClick={ this.handleButtonClick }
           >
             {answer}
           </button>
@@ -57,6 +77,8 @@ class GamePage extends Component {
           key={ index }
           type="button"
           data-testid={ `wrong-answer-${index}` }
+          style={ { border: '3px solid rgb(255, 0, 0)', borderStyle: borderAnswer } }
+          onClick={ this.handleButtonClick }
         >
           {answer}
         </button>
@@ -66,7 +88,7 @@ class GamePage extends Component {
   };
 
   render() {
-    const { questionCategory, questionText } = this.state;
+    const { questionCategory, questionText, isNextEnable } = this.state;
     return (
       <div>
         <Header />
@@ -78,6 +100,13 @@ class GamePage extends Component {
             { this.generateButtons() }
           </div>
         </div>
+        <button
+          type="button"
+          onClick={ () => this.handleNext() }
+          disabled={ !isNextEnable }
+        >
+          Next
+        </button>
       </div>
     );
   }
