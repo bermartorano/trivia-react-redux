@@ -16,6 +16,7 @@ class Game extends Component {
     timeOut: false,
     tempo: 30,
     score: 0,
+    next: false,
   };
 
   componentDidMount() {
@@ -54,6 +55,7 @@ class Game extends Component {
       isNextEnable: false,
       timeOut: false,
       tempo: 30,
+      next: false,
     });
   };
 
@@ -64,6 +66,7 @@ class Game extends Component {
       borderAnswer: current === 'hidden' && 'solid',
       timeOut: true,
       isNextEnable: true,
+      next: true,
     }, () => this.updatePlayerScore(false));
     if (target.textContent === correctAnswer) this.updatePlayerScore(true);
     if (target.textContent !== correctAnswer) this.updatePlayerScore(false);
@@ -138,7 +141,7 @@ class Game extends Component {
   };
 
   render() {
-    const { questionCategory, questionText, isNextEnable, tempo } = this.state;
+    const { questionCategory, questionText, isNextEnable, tempo, next } = this.state;
     return (
       <div>
         <Header />
@@ -151,14 +154,16 @@ class Game extends Component {
             { this.generateButtons() }
           </div>
         </div>
-        <button
-          type="button"
-          onClick={ () => this.handleNext() }
-          disabled={ !isNextEnable }
-          data-testid="btn-next"
-        >
-          Next
-        </button>
+        { next && (
+          <button
+            type="button"
+            onClick={ () => this.handleNext() }
+            disabled={ !isNextEnable }
+            data-testid="btn-next"
+          >
+            Next
+          </button>
+        )}
       </div>
     );
   }
