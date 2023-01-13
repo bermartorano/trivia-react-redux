@@ -11,10 +11,12 @@ class GamePage extends Component {
     correctAnswer: '',
     borderAnswer: 'hidden',
     isNextEnable: false,
+    timeOut: false,
   };
 
   componentDidMount() {
     this.getTrivia();
+    this.timer();
   }
 
   getTrivia = async () => {
@@ -45,11 +47,13 @@ class GamePage extends Component {
     this.setState({
       borderAnswer: 'hidden',
       isNextEnable: false,
+      timeOut: false,
     });
   };
 
   handleButtonClick = () => {
     const { borderAnswer: current } = this.state;
+
     this.setState({
       borderAnswer: current === 'hidden' && 'solid',
       isNextEnable: true,
@@ -57,7 +61,13 @@ class GamePage extends Component {
   };
 
   generateButtons = () => {
-    const { answers, correctAnswer, borderAnswer } = this.state;
+    const {
+      answers,
+      correctAnswer,
+      borderAnswer,
+      timeOut,
+    } = this.state;
+
     const allBtns = answers.map((answer, index) => {
       if (answer === correctAnswer) {
         return (
@@ -65,8 +75,9 @@ class GamePage extends Component {
             key={ index }
             data-testid="correct-answer"
             type="button"
-            style={ { border: '3px solid rgb(6, 240, 15)', borderStyle: borderAnswer } }
+            style={ { border: '3px rgb(6, 240, 15)', borderStyle: borderAnswer } }
             onClick={ this.handleButtonClick }
+            disabled={ timeOut }
           >
             {answer}
           </button>
@@ -77,14 +88,21 @@ class GamePage extends Component {
           key={ index }
           type="button"
           data-testid={ `wrong-answer-${index}` }
-          style={ { border: '3px solid rgb(255, 0, 0)', borderStyle: borderAnswer } }
+          style={ { border: '3px rgb(255, 0, 0)', borderStyle: borderAnswer } }
           onClick={ this.handleButtonClick }
+          disabled={ timeOut }
         >
           {answer}
         </button>
       );
     });
     return allBtns;
+  };
+
+  timer = async () => {
+    setInterval(() => {
+      this.setState({ timeOut: true, isNextEnable: true });
+    }, Number('30000'));
   };
 
   render() {
@@ -104,6 +122,7 @@ class GamePage extends Component {
           type="button"
           onClick={ () => this.handleNext() }
           disabled={ !isNextEnable }
+          data-testid="btn-next"
         >
           Next
         </button>
