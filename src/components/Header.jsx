@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import md5 from 'crypto-js/md5';
-// import logo from '../trivia.png';
 
 class Header extends Component {
   render() {
