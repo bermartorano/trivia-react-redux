@@ -1,9 +1,9 @@
 import { combineReducers } from 'redux';
-import info from './info';
+import player from './player';
 
 const rootReducer = combineReducers(
   {
-    info,
+    player,
   },
 );
 

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
-import tokenAndInfoSave from '../redux/actions/index';
+import { tokenAndInfoSave } from '../redux/actions/index';
 import tokenApi from '../services/api';
 import logo from '../trivia.png';
 // import '../App.css';
