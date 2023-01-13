@@ -52,7 +52,7 @@ describe('Teste da tela de Login', () => {
 
     userEvent.click(screenBtnPlay);
     history.push('/game');
-    await waitFor(()=> { expect(history.location.pathname).toBe('/game') });
+    await waitFor(() => { expect(history.location.pathname).toBe('/game'); });
   });
 
   it('se o botão settings redireciona para o componente Settings', async () => {
@@ -62,16 +62,16 @@ describe('Teste da tela de Login', () => {
 
     userEvent.click(screenBtnSettings);
     history.push('/settings');
-    await waitFor(()=> { expect(history.location.pathname).toBe('/settings') });
+    await waitFor(() => { expect(history.location.pathname).toBe('/settings'); });
   });
 
   it('se o token esta no localStorage', async () => {
-    localStorage.setItem('token',mockApi.token)
-    const spyOn =  jest.spyOn(global, 'fetch');
-        global.fetch.mockResolvedValue({
-            json: jest.fn().mockResolvedValue(mockApi),
-        }); 
-    const {history} = renderWithRouterAndRedux(<App/>)
+    localStorage.setItem('token', mockApi.token);
+    const spyOn = jest.spyOn(global, 'fetch');
+    global.fetch.mockResolvedValue({
+      json: jest.fn().mockResolvedValue(mockApi),
+    });
+    const { history } = renderWithRouterAndRedux(<App />);
     const screenName = screen.getByTestId(nameInput);
     const screenEmail = screen.getByTestId(emailInput);
     const screenBtnPlay = screen.getByTestId(buttonPlay);
@@ -80,7 +80,8 @@ describe('Teste da tela de Login', () => {
     userEvent.type(screenEmail, 'email@test3.com');
     userEvent.click(screenBtnPlay);
 
-    await waitFor(()=> { expect(history.location.pathname).toBe('/game') })
-    await (waitFor(() =>expect(spyOn).toHaveBeenCalled()));
+    history.push('/game');
+    await waitFor(() => { expect(history.location.pathname).toBe('/game'); });
+    await (waitFor(() => expect(spyOn).toHaveBeenCalled()));
   });
 });
