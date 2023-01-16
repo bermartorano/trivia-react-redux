@@ -3,6 +3,7 @@ const INITIAL_STATE = {
   name: '',
   email: '',
   score: 0,
+  assertions: 0,
 };
 const info = (state = INITIAL_STATE, action) => {
   switch (action.type) {
@@ -17,6 +18,7 @@ const info = (state = INITIAL_STATE, action) => {
     return {
       ...state,
       score: action.payload.score,
+      assertions: action.payload.assertions,
     };
   default:
     return state;
