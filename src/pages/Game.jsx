@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
+import md5 from 'crypto-js/md5';
 import Header from '../components/Header';
 import triviaApi from '../services/triviaApi';
 import { scoreSave } from '../redux/actions/index';
@@ -22,6 +23,7 @@ class Game extends Component {
     score: 0,
     next: false,
     numQ: 0,
+    assertions: 0,
   };
 
   async componentDidMount() {
@@ -38,7 +40,7 @@ class Game extends Component {
   };
 
   perguntas = () => {
-    const { history } = this.props;
+    const { history, score, name, email } = this.props;
     const { qNumber, data } = this.state;
     console.log(qNumber);
     if (qNumber < Number('5')) {
@@ -55,6 +57,16 @@ class Game extends Component {
         difficulty: data[qNumber].difficulty });
       this.setState((perv) => ({ qNumber: perv.qNumber + 1 }));
     } else {
+      const playerScore = {
+        name,
+        score,
+        email: md5(email).toString(),
+      };
+      const getStorage = localStorage.getItem('ranking')
+        ? JSON.parse(localStorage.getItem('ranking'))
+        : '';
+      const storage = [...getStorage, playerScore];
+      localStorage.setItem('ranking', JSON.stringify(storage));
       history.push('/feedback');
     }
   };
@@ -85,7 +97,7 @@ class Game extends Component {
   };
 
   updatePlayerScore = (boolean) => {
-    const { tempo, difficulty, score } = this.state;
+    const { tempo, difficulty, score, assertions } = this.state;
     const { dispatch } = this.props;
 
     if (boolean) {
@@ -95,13 +107,15 @@ class Game extends Component {
       if (difficulty === 'hard') difficultyLevel = Number('3');
       this.setState((prev) => ({
         score: prev.score + (Number('10') + (tempo * difficultyLevel)),
+        assertions: prev.assertions + 1,
       }));
-      dispatch(scoreSave(score));
+      dispatch(scoreSave(score, assertions));
     } else {
       this.setState((prev) => ({
         score: prev.score,
+        assertions: prev.assertions,
       }));
-      dispatch(scoreSave(score));
+      dispatch(scoreSave(score, assertions));
     }
   };
 

@@ -3,7 +3,7 @@ export const tokenAndInfoSave = (token, name, email) => ({
   payload: { token, name, email },
 });
 
-export const scoreSave = (score) => ({
+export const scoreSave = (score, assertions) => ({
   type: 'SCORE',
-  payload: { score },
+  payload: { score, assertions },
 });
